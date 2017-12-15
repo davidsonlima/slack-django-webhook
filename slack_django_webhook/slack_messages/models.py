@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-from django_hstore import hstore
+# from django_hstore import hstore
 
 
 class WebhookTransaction(models.Model):
@@ -15,17 +15,21 @@ class WebhookTransaction(models.Model):
         (ERROR, 'Error'),
     )
 
-    date_generated = models.DateTimeField()
+    date_event_generated = models.DateTimeField()
     date_received = models.DateTimeField(default=timezone.now)
-    body = hstore.SerializedDictionaryField()
-    request_meta = hstore.SerializedDictionaryField()
+    # body = hstore.SerializedDictionaryField()
+    body = models.TextField()
+    # request_meta = hstore.SerializedDictionaryField()
+    request_meta = models.TextField()
     status = models.CharField(max_length=250, choices=STATUSES, default=UNPROCESSED)
 
-    objects = hstore.HStoreManager()
+    # objects = hstore.HStoreManager()
 
     def __unicode__(self):
         return u'{0}'.format(self.date_event_generated)
-class Message(TransactionalData):
+
+TransactionalData = ''
+class Message(models.Model):
     date_processed = models.DateTimeField(default=timezone.now)
     webhook_transaction = models.OneToOneField(WebhookTransaction)
 
@@ -39,4 +43,4 @@ class Message(TransactionalData):
     trigger_word = models.CharField(max_length=250)
 
     def __unicode__(self):
-        return u'{}'.format(self.username)
+        return u'{}'.format(self.user_name)
